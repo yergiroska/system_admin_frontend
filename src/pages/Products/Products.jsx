@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../../services/api'
 import Pagination from '../../components/Pagination'
 import '../Companies/Companies.css'
@@ -10,20 +11,31 @@ export default function Products() {
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
+    const navigate = useNavigate()
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const res = await api.get('/products/')
-                setProducts(res.data)
-            } catch (err) {
-                console.error(err)
-            } finally {
-                setLoading(false)
-            }
+    const fetchProducts = async () => {
+        try {
+            const res = await api.get('/products/')
+            setProducts(res.data)
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setLoading(false)
         }
+    }
+    useEffect(() => {
         fetchProducts()
     }, [])
+
+    const handleDelete = async (id, name) => {
+        if (!window.confirm(`¿Eliminar el producto "${name}"?`)) return
+        try {
+            await api.delete(`/products/${id}`)
+            fetchProducts()
+        } catch (err) {
+            console.error(err)
+        }
+    }
 
     const filtered = products.filter(p =>
         p.name.toLowerCase().includes(search.toLowerCase())
@@ -48,6 +60,9 @@ export default function Products() {
                     <h1 className="page-title">Productos</h1>
                     <p className="page-subtitle">{products.length} productos en total</p>
                 </div>
+                <button className="btn-primary" onClick={() => navigate('/products/create')}>
+                    + Nuevo producto
+                </button>
             </div>
 
             <div className="search-bar">
@@ -67,6 +82,7 @@ export default function Products() {
                         <th>Nombre</th>
                         <th>Descripción</th>
                         <th>Creado</th>
+                        <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -86,6 +102,22 @@ export default function Products() {
                                 {product.created_at
                                     ? new Date(product.created_at).toLocaleDateString('es-ES')
                                     : '—'}
+                            </td>
+                            <td>
+                                <div className="action-btns">
+                                    <button
+                                        className="btn-edit"
+                                        onClick={() => navigate(`/products/${product.id}/edit`)}
+                                    >
+                                        Editar
+                                    </button>
+                                    <button
+                                        className="btn-delete"
+                                        onClick={() => handleDelete(product.id, product.name)}
+                                    >
+                                        Eliminar
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     ))}

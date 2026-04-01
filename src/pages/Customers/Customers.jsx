@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../../services/api'
 import Pagination from '../../components/Pagination'
 import '../Companies/Companies.css'
@@ -11,31 +12,42 @@ export default function Customers() {
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
     const [currentPage, setCurrentPage] = useState(1)
+    const navigate = useNavigate()
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [customersRes, segmentsRes] = await Promise.all([
-                    api.get('/customers/'),
-                    api.get('/ml/customer-segments'),
-                ])
-                setCustomers(customersRes.data)
+    const fetchData = async () => {
+        try {
+            const [customersRes, segmentsRes] = await Promise.all([
+                api.get('/customers/'),
+                api.get('/ml/customer-segments'),
+            ])
+            setCustomers(customersRes.data)
 
-                const segmentMap = {}
-                for (const [segment, data] of Object.entries(segmentsRes.data)) {
-                    data.customers.forEach(c => {
-                        segmentMap[c.id] = segment
-                    })
-                }
-                setSegments(segmentMap)
-            } catch (err) {
-                console.error(err)
-            } finally {
-                setLoading(false)
+            const segmentMap = {}
+            for (const [segment, data] of Object.entries(segmentsRes.data)) {
+                data.customers.forEach(c => {
+                    segmentMap[c.id] = segment
+                })
             }
+            setSegments(segmentMap)
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setLoading(false)
         }
+    }
+    useEffect(() => {
         fetchData()
     }, [])
+
+    const handleDelete = async (id, name) => {
+        if (!window.confirm(`¿Eliminar el cliente "${name}"?`)) return
+        try {
+            await api.delete(`/customers/${id}`)
+            fetchData()
+        } catch (err) {
+            console.error(err)
+        }
+    }
 
     const filtered = customers.filter(c =>
         `${c.first_name} ${c.last_name}`.toLowerCase().includes(search.toLowerCase())
@@ -75,6 +87,9 @@ export default function Customers() {
                     <h1 className="page-title">Clientes</h1>
                     <p className="page-subtitle">{customers.length} clientes en total</p>
                 </div>
+                <button className="btn-primary" onClick={() => navigate('/customers/create')}>
+                    + Nuevo cliente
+                </button>
             </div>
 
             <div className="search-bar">
@@ -95,6 +110,7 @@ export default function Customers() {
                         <th>Documento</th>
                         <th>Segmento</th>
                         <th>Creado</th>
+                        <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -115,6 +131,22 @@ export default function Customers() {
                                 {customer.created_at
                                     ? new Date(customer.created_at).toLocaleDateString('es-ES')
                                     : '—'}
+                            </td>
+                            <td>
+                                <div className="action-btns">
+                                    <button
+                                        className="btn-edit"
+                                        onClick={() => navigate(`/customers/${customer.id}/edit`)}
+                                    >
+                                        Editar
+                                    </button>
+                                    <button
+                                        className="btn-delete"
+                                        onClick={() => handleDelete(customer.id, `${customer.first_name} ${customer.last_name}`)}
+                                    >
+                                        Eliminar
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     ))}
