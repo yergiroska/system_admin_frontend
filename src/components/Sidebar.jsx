@@ -11,6 +11,7 @@ export default function Sidebar() {
         { to: '/products', label: 'Productos', icon: '📦' },
         { to: '/customers', label: 'Clientes', icon: '👥' },
         { to: '/purchases', label: 'Compras', icon: '🛒' },
+        { to: '/reports', label: 'Reportes', icon: '📄' },
     ]
 
     return (

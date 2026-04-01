@@ -10,6 +10,7 @@ import CustomerForm from './pages/Customers/CustomerForm'
 import Products from './pages/Products/Products'
 import Customers from './pages/Customers/Customers'
 import Purchases from './pages/Purchases/Purchases'
+import Reports from './pages/Reports/Reports'
 
 const PrivateRoute = ({ children }) => {
   return isAuthenticated() ? (
@@ -55,6 +56,9 @@ export default function App() {
         } />  
         <Route path="/purchases" element={
           <PrivateRoute><Purchases /></PrivateRoute>
+        } />
+        <Route path="/reports" element={
+          <PrivateRoute><Reports /></PrivateRoute>
         } />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
