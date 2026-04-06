@@ -1,17 +1,18 @@
-import { NavLink } from 'react-router-dom'
-import { logout, getUser } from '../services/authService'
+import {NavLink} from 'react-router-dom'
+import {getUser, logout} from '../services/authService'
 import './Sidebar.css'
 
 export default function Sidebar() {
     const user = getUser()
 
     const links = [
-        { to: '/dashboard', label: 'Dashboard', icon: '📊' },
-        { to: '/companies', label: 'Empresas', icon: '🏢' },
-        { to: '/products', label: 'Productos', icon: '📦' },
-        { to: '/customers', label: 'Clientes', icon: '👥' },
-        { to: '/purchases', label: 'Compras', icon: '🛒' },
-        { to: '/reports', label: 'Reportes', icon: '📄' },
+        {to: '/dashboard', label: 'Dashboard', icon: '📊'},
+        {to: '/companies', label: 'Empresas', icon: '🏢'},
+        {to: '/products', label: 'Productos', icon: '📦'},
+        {to: '/customers', label: 'Clientes', icon: '👥'},
+        {to: '/purchases', label: 'Compras', icon: '🛒'},
+        {to: '/reports', label: 'Reportes', icon: '📄'},
+        {to: '/ml', label: 'ML & IA', icon: '🤖'},
     ]
 
     return (
@@ -24,7 +25,7 @@ export default function Sidebar() {
                     <NavLink
                         key={link.to}
                         to={link.to}
-                        className={({ isActive }) =>
+                        className={({isActive}) =>
                             isActive ? 'nav-link active' : 'nav-link'
                         }
                     >
