@@ -23,7 +23,7 @@ export default function Customers() {
             setCustomers(customersRes.data)
 
             const segmentMap = {}
-            for (const [segment, data] of Object.entries(segmentsRes.data)) {
+            for (const [segment, data] of Object.entries(segmentsRes.data.segments)) {
                 data.customers.forEach(c => {
                     segmentMap[c.id] = segment
                 })
@@ -134,6 +134,18 @@ export default function Customers() {
                             </td>
                             <td>
                                 <div className="action-btns">
+                                    <button
+                                        className="btn-edit"
+                                        onClick={() => navigate(`/customers/${customer.id}/history`)}
+                                    >
+                                        Ver
+                                    </button>
+                                    <button
+                                        className="btn-edit"
+                                        onClick={() => navigate(`/customers/${customer.id}/buy`)}
+                                    >
+                                        Comprar
+                                    </button>
                                     <button
                                         className="btn-edit"
                                         onClick={() => navigate(`/customers/${customer.id}/edit`)}

@@ -92,6 +92,7 @@
     color: #374151;
     line-height: 1.6;
     white-space: pre-wrap;
+	text-align: left;
 }
 
 .segment-grid {
@@ -233,4 +234,55 @@
     background: #f8fafc;
     color: #94a3b8;
     cursor: not-allowed;
+}
+
+.ml-card-desc {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 16px;
+    line-height: 1.5;
+    text-align: left;
+}
+
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: help;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
+.tooltip-box {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);  /* ← cambia bottom por top */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: white;
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 8px 12px;
+    border-radius: 8px;
+    width: 300px;
+    white-space: normal;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.tooltip-wrapper:hover .tooltip-box {
+    display: block;
 }

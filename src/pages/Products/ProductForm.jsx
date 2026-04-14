@@ -70,10 +70,12 @@ export default function ProductForm() {
             }
             if (isEditing) {
                 await api.put(`/products/${id}`, payload)
+                navigate('/products')
             } else {
-                await api.post('/products/', payload)
+                const res = await api.post('/products/', payload)
+                const newId = res.data.id
+                navigate(`/products/${newId}/edit`)
             }
-            navigate('/products')
         } catch (err) {
             setError('Error al guardar el producto')
         } finally {

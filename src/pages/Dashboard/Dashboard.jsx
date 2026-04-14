@@ -85,7 +85,7 @@ export default function Dashboard() {
             <div className="metrics-grid">
                 <div className="metric-card blue">
                     <div className="metric-label">Ingresos totales</div>
-                    <div className="metric-value">€{filteredStats.total_sales.toLocaleString('es-ES', { maximumFractionDigits: 0 })}</div>
+                    <div className="metric-value">€{filteredStats.total_sales.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2  })}</div>
                     <div className="metric-sub">{selectedMonth === 'all' ? 'Todas las compras' : selectedMonth}</div>
                 </div>
                 <div className="metric-card cyan">

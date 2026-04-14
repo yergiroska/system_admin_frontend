@@ -1,0 +1,7 @@
+### Listar productos
+GET {{base_url}}/company-products/product/65
+Authorization: Bearer {{token}}
+
+### Listar productos
+GET {{base_url}}/company-products/all
+Authorization: Bearer {{token}}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../../services/api'
 import '../Companies/Companies.css'
 import './Reports.css'
@@ -10,6 +11,7 @@ const reports = [
         description: 'Resumen general con top 10 empresas y productos más vendidos.',
         icon: '📊',
         endpoint: '/reports/sales-summary',
+        previewEndpoint: '/reports/sales-summary/preview',
         filename: 'reporte_ventas.pdf',
         hasDateRange: false,
     },
@@ -19,6 +21,7 @@ const reports = [
         description: 'Clientes con mayor volumen de compras y gasto total.',
         icon: '👥',
         endpoint: '/reports/top-customers',
+        previewEndpoint: '/reports/top-customers/preview',
         filename: 'reporte_top_clientes.pdf',
         hasDateRange: false,
     },
@@ -28,6 +31,7 @@ const reports = [
         description: 'Precios que se salen del patrón normal detectados por ML.',
         icon: '⚠️',
         endpoint: '/reports/anomalies',
+        previewEndpoint: '/reports/anomalies/preview',
         filename: 'reporte_anomalias.pdf',
         hasDateRange: false,
     },
@@ -37,6 +41,7 @@ const reports = [
         description: 'Productos que no tienen compras registradas.',
         icon: '😴',
         endpoint: '/reports/dormant-products',
+        previewEndpoint: '/reports/dormant-products/preview',
         filename: 'reporte_productos_dormidos.pdf',
         hasDateRange: false,
     },
@@ -46,6 +51,7 @@ const reports = [
         description: 'Ventas desglosadas por mes para cada empresa.',
         icon: '🏢',
         endpoint: '/reports/monthly-summary',
+        previewEndpoint: '/reports/monthly-summary/preview',
         filename: 'reporte_mensual_empresas.pdf',
         hasDateRange: false,
     },
@@ -55,6 +61,7 @@ const reports = [
         description: 'Reporte de ventas filtrado por rango de fechas.',
         icon: '📅',
         endpoint: '/reports/sales-by-date',
+        previewEndpoint: '/reports/sales-by-date/preview',
         filename: 'reporte_ventas_periodo.pdf',
         hasDateRange: true,
     },
@@ -64,11 +71,11 @@ export default function Reports() {
     const [loading, setLoading] = useState({})
     const [dateRange, setDateRange] = useState({ start: '', end: '' })
     const [error, setError] = useState('')
+    const navigate = useNavigate()
 
     const handleDownload = async (report) => {
         setError('')
         setLoading(prev => ({ ...prev, [report.id]: true }))
-
         try {
             let endpoint = report.endpoint
             if (report.hasDateRange) {
@@ -79,7 +86,6 @@ export default function Reports() {
                 }
                 endpoint += `?start_date=${dateRange.start}&end_date=${dateRange.end}`
             }
-
             const response = await api.get(endpoint, { responseType: 'blob' })
             const url = window.URL.createObjectURL(new Blob([response.data]))
             const link = document.createElement('a')
@@ -94,6 +100,10 @@ export default function Reports() {
         } finally {
             setLoading(prev => ({ ...prev, [report.id]: false }))
         }
+    }
+
+    const handlePreview = (report) => {
+        navigate(`/reports/${report.id}/preview`)
     }
 
     return (
@@ -132,13 +142,14 @@ export default function Reports() {
                             </div>
                         )}
 
-                        <button
-                            className="btn-download"
-                            onClick={() => handleDownload(report)}
-                            disabled={loading[report.id]}
-                        >
-                            {loading[report.id] ? 'Generando...' : '⬇ Descargar PDF'}
-                        </button>
+                        <div className="report-actions">
+                            <button
+                                className="btn-preview"
+                                onClick={() => handlePreview(report)}
+                            >
+                                👁 Ver preview
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
