@@ -142,11 +142,21 @@ export default function MLPage() {
         if (!chatMessage.trim()) return
         const userMsg = chatMessage
         setChatMessage('')
-        setChatHistory(prev => [...prev, { role: 'user', content: userMsg }])
+
+        const newHistory = [...chatHistory, { role: 'user', content: userMsg }]
+        setChatHistory(newHistory)
         setChatLoading(true)
+
         try {
-            const res = await api.post('/ai/chat', { message: userMsg })
-            setChatHistory(prev => [...prev, { role: 'assistant', content: res.data.response }])
+            const res = await api.post('/ai/chat', {
+                message: userMsg,
+                history: chatHistory.map(msg => ({
+                    role: msg.role,
+                    content: msg.content
+                }))
+            })
+
+            setChatHistory([...newHistory, { role: 'assistant', content: res.data.response }])
         } catch (err) {
             console.error(err)
         } finally {

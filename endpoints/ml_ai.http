@@ -1,0 +1,10 @@
+### Chat con usuario autenticado
+POST {{base_url}}/ai/chat
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "message": "¿Qué clientes compran más?",
+  "history": []
+}
+
